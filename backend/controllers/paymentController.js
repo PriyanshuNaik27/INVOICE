@@ -6,7 +6,7 @@ import Customer from '../models/customer.model.js';
 export const addPayment = async (req, res) => {
   try {
     const { name, amount, paymentDate } = req.body;
-    const customerName = name.trim();
+    const customerName = name.trim().toLowerCase();
 
     // Find if the customer exists
     let customer = await Customer.findOne({ name: customerName });

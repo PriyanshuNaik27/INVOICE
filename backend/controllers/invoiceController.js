@@ -2,40 +2,36 @@
 import Customer from '../models/customer.model.js';
 import Invoice from '../models/invoice.model.js';
 
-export const addInvoice = async (req, res) => {
-  //working 
+export const addInvoice = async ({ name, amount, date }) => {
   try {
-    const { name, amount, invoiceDate } = req.body;
-    const customerName = name.trim();
+    const customerName = name.trim().toLowerCase();
 
-  // find if the user ezits or not
-  let customer = await Customer.findOne({ name: customerName });
-  if (!customer) {
-    // if not, create a new customer
-    customer = await Customer.create({ name: customerName });
-  }
+    // 1. Find or create customer
+    let customer = await Customer.findOne({ name: customerName });
+    if (!customer) {
+      customer = await Customer.create({ name: customerName });
+    }
 
-  // here we create the invoice
-  const invoice = await Invoice.create({
-    customer: customer._id,
-    amount,
-    date: invoiceDate,
-  });
+    // 2. Create the invoice
+    const invoice = await Invoice.create({
+      customer: customer._id,
+      amount,
+      date,
+    });
 
-  res.status(201).json({
-    message: 'Invoice created successfully',
-    invoice: {
+    // 3. Return useful data
+    return {
       id: invoice._id,
       customer: customer.name,
       amount: invoice.amount,
       date: invoice.date,
-    },
-  });
+    };
   } catch (error) {
-    console.error("❌ Error in addInvoice:", error.message);
-    res.status(500).json({ message: error.message });
+    console.error("❌ Error in addInvoice service:", error.message);
+    throw new Error("Failed to add invoice");
   }
 };
+
 
 export const getAllInvoices = async (req, res) => {
   try {

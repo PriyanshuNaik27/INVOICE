@@ -7,20 +7,14 @@ const customerSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
-  phoneNumber: {
-    type: String,
-    unique: true,
-    trim: true,
-    validate: {
-      validator: function (v) {
-        return /^[0-9]{10}$/.test(v);
-      },
-      message: (props) =>
-        `${props.value} is not a valid 10-digit phone number!`,
-    },
-  },
 },{
     timestamps: true,
+});
+
+
+customerSchema.pre('save', function (next) {
+  this.name = this.name.toLowerCase();
+  next();
 });
 
 const Customer = mongoose.model("Customer", customerSchema);

@@ -1,7 +1,5 @@
 // controllers/customerController.js
-
 import Customer from '../models/customer.js';
-
 export const createCustomer = async (req, res) => {
   try {
     const customer = new Customer(req.body);
@@ -11,7 +9,6 @@ export const createCustomer = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
-
 export const getAllCustomers = async (req, res) => {
   try {
     const customers = await Customer.find();

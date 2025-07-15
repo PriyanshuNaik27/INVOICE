@@ -2,9 +2,8 @@
 
 import Reminder from '../models/remainder.model.js';
 
-export const addReminder = async (req, res) => {
+export const addReminder = async ({ title, dueDate } ) => {
   try {
-    const { title, dueDate } = req.body;
 
     // Create the reminder
     const reminder = await Reminder.create({
@@ -12,14 +11,11 @@ export const addReminder = async (req, res) => {
       dueDate: new Date(dueDate),
     });
 
-    res.status(201).json({
-      message: 'Reminder created successfully',
-      reminder: {
+    return {
         id: reminder._id,
         title: reminder.title,
         dueDate: reminder.dueDate,
-      },
-    });
+      };
   } catch (error) {
     console.error("❌ Error in addReminder:", error.message);
     res.status(500).json({ message: error.message });

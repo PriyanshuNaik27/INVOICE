@@ -50,6 +50,19 @@ export const processChat = async (req, res) => {
         response: `✅ Invoice of ₹${amount} added for ${name} on ${new Date(invoice.date).toDateString()}.`
       });
     }
+    if (intent === 'add_reminder') {
+      console.log(name);
+      console.log(amount);
+      if (!name || !amount) {
+        return res.json({ response: "Please provide both customer name and amount." });
+      }
+
+      const invoice = await addReminder({ title, dueDate });
+
+      return res.json({
+        response: `✅ Invoice of ₹${amount} added for ${name} on ${new Date(invoice.date).toDateString()}.`
+      });
+    }
 
     return res.json({ response: "Intent recognized but not supported yet." });
 

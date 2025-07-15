@@ -33,14 +33,29 @@ export const addInvoice = async ({ name, amount, date }) => {
 };
 
 
-export const getAllInvoices = async (req, res) => {
+export const getAllInvoices = async () => {
   try {
     const invoices = await Invoice.find().populate('customer');
-    res.json(invoices);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+
+    // Transform data for output (optional)
+    const formattedInvoices = invoices.map(inv => ({
+      id: inv._id,
+      customer: inv.customer ? inv.customer.name : null,
+      amount: inv.amount,
+      date: inv.date,
+    }));
+
+    return formattedInvoices;
+
+  } catch (error) {
+    console.error("❌ Error in getAllInvoices service:", error.message);
+    throw new Error("Failed to fetch invoices");
   }
 };
+
+
+
+
 
 
 

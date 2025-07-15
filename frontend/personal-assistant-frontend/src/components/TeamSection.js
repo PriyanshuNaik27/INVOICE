@@ -57,7 +57,7 @@ const TeamSection = () => {
     <div className="team-section">
       <div className="team-header">
         <h2>Meet Our Team</h2>
-        <p>The talented individuals behind your personal assistant</p>
+        <p>The talented individuals behind your personal</p>
       </div>
       
       <div className="team-grid">

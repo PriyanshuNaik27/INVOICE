@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { addInvoice } from './invoiceController.js';
-
-const WIT_API_TOKEN = 'Bearer LOFVGSTXC63BMJ5U3VG6FSHT6US3TBY2'; // No space before Bearer
+const WIT_API_TOKEN=process.env.WIT_API_TOKEN;
 
 export const processChat = async (req, res) => {
   try {

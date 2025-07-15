@@ -1,4 +1,3 @@
-// controllers/invoiceController.js
 
 import Invoice from '../models/invoice.js';
 
@@ -20,3 +19,17 @@ export const getAllInvoices = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+

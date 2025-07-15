@@ -1,4 +1,3 @@
-// controllers/invoiceController.js
 
 import Customer from '../models/customer.model.js';
 import Invoice from '../models/invoice.js';
@@ -45,3 +44,17 @@ export const getAllInvoices = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+

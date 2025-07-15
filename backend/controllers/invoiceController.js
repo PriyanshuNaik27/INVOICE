@@ -1,8 +1,9 @@
 
 import Customer from '../models/customer.model.js';
-import Invoice from '../models/invoice.js';
+import Invoice from '../models/invoice.model.js';
 
 export const addInvoice = async (req, res) => {
+  //working 
   try {
     const { name, amount, invoiceDate } = req.body;
     const customerName = name.trim();

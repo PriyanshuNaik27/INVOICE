@@ -1,14 +1,39 @@
 // controllers/paymentController.js
 
-import Payment from '../models/payment.js';
+import Payment from '../models/payment.model.js';
+import Customer from '../models/customer.model.js';
 
-export const createPayment = async (req, res) => {
+export const addPayment = async (req, res) => {
   try {
-    const payment = new Payment(req.body);
-    await payment.save();
-    res.status(201).json(payment);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+    const { name, amount, paymentDate } = req.body;
+    const customerName = name.trim();
+
+    // Find if the customer exists
+    let customer = await Customer.findOne({ name: customerName });
+    if (!customer) {
+      // If not, create a new customer
+      customer = await Customer.create({ name: customerName });
+    }
+
+    // Create the payment
+    const payment = await Payment.create({
+      customer: customer._id,
+      amount,
+      paymentDate: paymentDate || Date.now(),
+    });
+
+    res.status(201).json({
+      message: 'Payment created successfully',
+      payment: {
+        id: payment._id,
+        customer: customer.name,
+        amount: payment.amount,
+        paymentDate: payment.paymentDate,
+      },
+    });
+  } catch (error) {
+    console.error("❌ Error in addPayment:", error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 

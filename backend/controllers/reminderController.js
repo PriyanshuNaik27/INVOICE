@@ -1,14 +1,28 @@
 // controllers/reminderController.js
 
-import Reminder from '../models/reminder.js';
+import Reminder from '../models/remainder.model.js';
 
-export const createReminder = async (req, res) => {
+export const addReminder = async (req, res) => {
   try {
-    const reminder = new Reminder(req.body);
-    await reminder.save();
-    res.status(201).json(reminder);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+    const { title, dueDate } = req.body;
+
+    // Create the reminder
+    const reminder = await Reminder.create({
+      title: title.trim(),
+      dueDate: new Date(dueDate),
+    });
+
+    res.status(201).json({
+      message: 'Reminder created successfully',
+      reminder: {
+        id: reminder._id,
+        title: reminder.title,
+        dueDate: reminder.dueDate,
+      },
+    });
+  } catch (error) {
+    console.error("❌ Error in addReminder:", error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -20,3 +34,4 @@ export const getAllReminders = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+

@@ -3,9 +3,9 @@
 import Payment from '../models/payment.model.js';
 import Customer from '../models/customer.model.js';
 
-export const addPayment = async (req, res) => {
+export const addPayment = async ({ name, amount, paymentDate }) => {
   try {
-    const { name, amount, paymentDate } = req.body;
+   
     const customerName = name.trim().toLowerCase();
 
     // Find if the customer exists
@@ -22,15 +22,16 @@ export const addPayment = async (req, res) => {
       paymentDate: paymentDate || Date.now(),
     });
 
-    res.status(201).json({
-      message: 'Payment created successfully',
-      payment: {
+    return {
+      
         id: payment._id,
         customer: customer.name,
         amount: payment.amount,
         paymentDate: payment.paymentDate,
-      },
-    });
+      
+    };
+
+    
   } catch (error) {
     console.error("❌ Error in addPayment:", error.message);
     res.status(500).json({ message: error.message });

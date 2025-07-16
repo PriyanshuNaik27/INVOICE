@@ -2,44 +2,86 @@ import Customer from "../models/customer.model.js";
 import Invoice from "../models/invoice.model.js";
 import Payment from "../models/payment.model.js";
 
-export const getCustomerDue = async (req, res) => {
-  try {
-    const customerName = req.params.customerName.trim().toLowerCase();
+// 🟢 Get dues for ALL TIME
+export const getAllDues = async () => {
+  const customers = await Customer.find();
+  const results = [];
 
-    // 1. Find customer
-    const customer = await Customer.findOne({ name: customerName });
-    if (!customer) {
-      return res.status(404).json({ message: "Customer not found" });
-    }
-
-    // 2. Sum invoices
-    const invoiceTotal = await Invoice.aggregate([
-      { $match: { customer: customer._id } },/// ye filter karta hai 
-      { $group: { _id: null, total: { $sum: "$amount" } } } // ye total amount nikalta hai
-    ]);
-
-    const totalInvoices = invoiceTotal[0]?.total || 0;
-
-    // 3. Sum payments
-    const paymentTotal = await Payment.aggregate([
+  for (const customer of customers) {
+    const invoiceAgg = await Invoice.aggregate([
       { $match: { customer: customer._id } },
       { $group: { _id: null, total: { $sum: "$amount" } } }
     ]);
 
-    const totalPayments = paymentTotal[0]?.total || 0;
+    const paymentAgg = await Payment.aggregate([
+      { $match: { customer: customer._id } },
+      { $group: { _id: null, total: { $sum: "$amount" } } }
+    ]);
 
-    // 4. Calculate due
-    const due = totalInvoices - totalPayments;
+    const invoices = invoiceAgg[0]?.total || 0;
+    const payments = paymentAgg[0]?.total || 0;
+    const due = invoices - payments;
 
-    res.json({
-      customer: customer.name,
-      totalInvoices,
-      totalPayments,
-      due
-    });
-
-  } catch (error) {
-    console.error("❌ Error in getCustomerDue:", error.message);
-    res.status(500).json({ message: error.message });
+    if (due > 0) {
+      results.push({
+        customer: customer.name,
+        invoices,
+        payments,
+        due
+      });
+    }
   }
+
+  return results;
+};
+
+// 🟡 Get dues for a specific month
+export const getMonthlyDues = async ({ month, year }) => {
+  const startDate = new Date(`${year}-${month}-01`);
+  const endDate = new Date(startDate);
+  endDate.setMonth(endDate.getMonth() + 1);
+
+  const customers = await Customer.find();
+  const results = [];
+
+  for (const customer of customers) {
+    const invoiceAgg = await Invoice.aggregate([
+      {
+        $match: {
+          customer: customer._id,
+          date: { $gte: startDate, $lt: endDate }
+        }
+      },
+      {
+        $group: { _id: null, total: { $sum: "$amount" } }
+      }
+    ]);
+
+    const paymentAgg = await Payment.aggregate([
+      {
+        $match: {
+          customer: customer._id,
+          paymentDate: { $gte: startDate, $lt: endDate }
+        }
+      },
+      {
+        $group: { _id: null, total: { $sum: "$amount" } }
+      }
+    ]);
+
+    const invoices = invoiceAgg[0]?.total || 0;
+    const payments = paymentAgg[0]?.total || 0;
+    const due = invoices - payments;
+
+    if (due > 0) {
+      results.push({
+        customer: customer.name,
+        invoices,
+        payments,
+        due
+      });
+    }
+  }
+
+  return results;
 };

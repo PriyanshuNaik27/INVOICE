@@ -1,7 +1,7 @@
 const Navbar = ({ currentPage, setCurrentPage, darkMode, setDarkMode }) => {
   return (
     <nav className="bg-gray-800 text-white px-6 py-4 shadow flex justify-between items-center">
-      <h1 className="text-lg font-semibold">GPT Clone</h1>
+      <h1 className="text-lg font-semibold">INVOICER</h1>
       <div className="space-x-4 flex items-center">
         {currentPage !== "chat" && (
           <button

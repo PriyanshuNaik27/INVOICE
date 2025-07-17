@@ -24,7 +24,7 @@ export const processChat = async (req, res) => {
     const intent = intents?.[0]?.name;
     const confidence = intents?.[0]?.confidence || 0;
 
-    if (!intent || confidence < 0.2) {
+    if (!intent || confidence < 0.8) {
       return res.json({ response: "Sorry, I didn't understand that clearly." });
     }
     console.log("🔍 Entities:", JSON.stringify(entities, null, 2));
@@ -112,7 +112,7 @@ export const processChat = async (req, res) => {
     }
 
      // 🟡 Monthly dues (e.g. "Dues in July 2025")
-    if (intent === "get_dues") {
+    if (intent === "get_monthly_dues") {
       const datetime = entities["wit$datetime:datetime"]?.[0]?.value;
 
       if (!datetime) {

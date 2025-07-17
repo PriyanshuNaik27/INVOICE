@@ -24,7 +24,9 @@ export const processChat = async (req, res) => {
     const intent = intents?.[0]?.name;
     const confidence = intents?.[0]?.confidence || 0;
 
+
     if (!intent || confidence < 0.7) {
+
       return res.json({ response: "Sorry, I didn't understand that clearly." });
     }
     console.log("🔍 Entities:", JSON.stringify(entities, null, 2));

@@ -1,17 +1,33 @@
-const Navbar = () => {
+const Navbar = ({ currentPage, setCurrentPage, darkMode, setDarkMode }) => {
   return (
-    <nav className="bg-white shadow-md py-4 px-6">
-      <div className="max-w-6xl mx-auto flex justify-between items-center">
-        <h1 className="text-xl font-bold text-blue-600">🤖 AI Assistant</h1>
-        <div className="space-x-4 text-sm">
-          <a href="#" className="text-gray-700 hover:text-blue-500">Home</a>
-          <a href="#" className="text-gray-700 hover:text-blue-500">Docs</a>
-          <a href="#" className="text-gray-700 hover:text-blue-500">Contact</a>
-        </div>
+    <nav className="bg-gray-800 text-white px-6 py-4 shadow flex justify-between items-center">
+      <h1 className="text-lg font-semibold">GPT Clone</h1>
+      <div className="space-x-4 flex items-center">
+        {currentPage !== "chat" && (
+          <button
+            onClick={() => setCurrentPage("chat")}
+            className="hover:text-green-400 transition-colors"
+          >
+            Chat
+          </button>
+        )}
+        {currentPage !== "team" && (
+          <button
+            onClick={() => setCurrentPage("team")}
+            className="hover:text-green-400 transition-colors"
+          >
+            Team
+          </button>
+        )}
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          className="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600 transition-all duration-300"
+        >
+          Toggle {darkMode ? "Light" : "Dark"}
+        </button>
       </div>
     </nav>
   );
 };
 
 export default Navbar;
-

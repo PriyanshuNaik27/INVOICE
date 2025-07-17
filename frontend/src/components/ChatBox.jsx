@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import axios from "axios";
-
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const ChatBox = ({ darkMode }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -24,9 +24,9 @@ const ChatBox = ({ darkMode }) => {
     setLoading(true); // Start loading
 
     try {
-      const res = await axios.post("http://localhost:8000/api/v1/chat", {
-        message: input,
-      });
+      const res = await axios.post(`${BACKEND_URL}/api/v1/chat`, {
+          message: input,
+      }, { withCredentials: true });
 
       const botMsg = { sender: "bot", text: res.data.response };
       setMessages((prev) => [...prev, botMsg]);

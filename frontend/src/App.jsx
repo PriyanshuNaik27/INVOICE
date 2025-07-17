@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/Nav";
 import ChatBox from "./components/ChatBox";
 import Team from "./components/Team";
 

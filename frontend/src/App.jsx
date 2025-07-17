@@ -20,11 +20,9 @@ function App() {
         setDarkMode={setDarkMode}
       />
 
-      <main className="flex-grow flex justify-center items-start p-4">
-        <div className="w-full max-w-3xl">
-          {currentPage === "chat" && <ChatBox darkMode={darkMode} />}
-          {currentPage === "team" && <Team />}
-        </div>
+      <main className="flex-grow flex flex-col">
+        {currentPage === "chat" && <ChatBox darkMode={darkMode} />}
+        {currentPage === "team" && <Team />}
       </main>
     </div>
   );

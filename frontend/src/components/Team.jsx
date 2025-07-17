@@ -10,7 +10,7 @@ import ayushImage from './pics/ayush.jpg';
 import abhishekImage from './pics/aj.png';
 import priyanshuImage from './pics/priyanshu.jpg';
 
-const TeamSection = ({ setActiveTab }) => {
+const Team = ({ setActiveTab }) => {
   const swiperRef = useRef(null);
 
   const teamMembers = [

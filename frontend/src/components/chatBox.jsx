@@ -9,7 +9,7 @@ const ChatBox = () => {
     if (!input.trim()) return;
 
     const userMsg = { sender: "user", text: input };
-    setMessages(prev => [...prev, userMsg]);
+    setMessages((prev) => [...prev, userMsg]);
 
     try {
       const res = await axios.post("http://localhost:8000/api/v1/chat", {
@@ -17,9 +17,9 @@ const ChatBox = () => {
       });
 
       const botMsg = { sender: "bot", text: res.data.response };
-      setMessages(prev => [...prev, botMsg]);
+      setMessages((prev) => [...prev, botMsg]);
     } catch (err) {
-      setMessages(prev => [
+      setMessages((prev) => [
         ...prev,
         { sender: "bot", text: "❌ Error contacting assistant." },
       ]);
@@ -29,18 +29,34 @@ const ChatBox = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-10 border rounded-lg shadow p-4 bg-white">
-      <div className="h-96 overflow-y-auto flex flex-col gap-2 mb-4 p-2 border bg-gray-50 rounded">
+    <div className="max-w-2xl mx-auto border rounded-lg shadow-lg bg-white p-4">
+      <div className="h-96 overflow-y-auto flex flex-col gap-3 mb-4 p-3 border rounded bg-gray-50">
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`text-sm p-2 rounded ${
-              msg.sender === "user"
-                ? "bg-blue-100 self-end"
-                : "bg-green-100 self-start"
+            className={`flex items-start gap-2 ${
+              msg.sender === "user" ? "justify-end" : "justify-start"
             }`}
           >
-            {msg.text}
+            {msg.sender === "bot" && (
+              <div className="w-8 h-8 bg-green-400 text-white rounded-full flex items-center justify-center text-sm">
+                🤖
+              </div>
+            )}
+            <div
+              className={`text-sm p-3 rounded-lg max-w-xs ${
+                msg.sender === "user"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
+            >
+              {msg.text}
+            </div>
+            {msg.sender === "user" && (
+              <div className="w-8 h-8 bg-blue-400 text-white rounded-full flex items-center justify-center text-sm">
+                🧑
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -49,12 +65,12 @@ const ChatBox = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          className="flex-1 border p-2 rounded"
-          placeholder="Ask something..."
+          className="flex-1 border p-2 rounded focus:outline-blue-400"
+          placeholder="Type your message..."
         />
         <button
           onClick={handleSend}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
         >
           Send
         </button>

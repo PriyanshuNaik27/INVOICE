@@ -29,5 +29,5 @@ const Navbar = ({ currentPage, setCurrentPage, darkMode, setDarkMode }) => {
     </nav>
   );
 };
-//
+//.
 export default Navbar;

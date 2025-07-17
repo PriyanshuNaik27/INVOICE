@@ -162,4 +162,4 @@ const TeamSection = ({ setActiveTab }) => {
   );
 };
 //
-export default TeamSection;
+export default Team;

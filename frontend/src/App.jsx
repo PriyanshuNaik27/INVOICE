@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Navbar from "./components/Nav";
-import ChatBox from "./components/ChatBox";
-import Team from "./components/Team";
+import Navbar from "./components/navbar";
+import ChatBox from "./components/chatbox";
+import Team from "./components/team";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("chat");

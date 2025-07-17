@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { FaLinkedin, FaGithub, FaEnvelope, FaArrowLeft } from 'react-icons/fa';
+import { FaLinkedin, FaGithub, FaEnvelope } from 'react-icons/fa';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectCoverflow } from 'swiper/modules';
 import 'swiper/css';
@@ -83,20 +83,11 @@ const TeamSection = ({ setActiveTab }) => {
 
   return (
     <div className="team-section px-4 py-10 max-w-7xl mx-auto">
-      <div className="team-navigation mb-6">
-        <button 
-          className="flex items-center text-green-400 hover:text-green-300 transition-colors"
-          onClick={() => setActiveTab('chat')}
-        >
-          <FaArrowLeft className="mr-2" /> Back to Chat
-        </button>
-      </div>
-      
       <div className="team-header text-center mb-10">
         <h2 className="text-3xl font-bold mb-2">Meet Our Team</h2>
         <p className="text-gray-400">The talented individuals behind INVOICER</p>
       </div>
-      
+
       <div className="team-carousel-container">
         <Swiper
           ref={swiperRef}
@@ -137,11 +128,13 @@ const TeamSection = ({ setActiveTab }) => {
           {slidesToRender.map((member, index) => (
             <SwiperSlide key={index} style={{ width: "320px" }}>
               <div className="team-card-carousel bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="member-image-carousel w-full h-48 object-cover"
-                />
+                <div className="w-full h-48 bg-black flex items-center justify-center">
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="member-image-carousel w-full h-full object-contain"
+                  />
+                </div>
                 <div className="member-info-carousel p-4">
                   <h3 className="text-xl font-semibold mb-1">{member.name}</h3>
                   <p className="role text-green-400 mb-2">{member.role}</p>

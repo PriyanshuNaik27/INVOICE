@@ -4,6 +4,7 @@ import axios from "axios";
 const ChatBox = ({ darkMode }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false); // New: loading state
   const inputRef = useRef(null);
 
   const examples = [
@@ -20,6 +21,7 @@ const ChatBox = ({ darkMode }) => {
 
     const userMsg = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMsg]);
+    setLoading(true); // Start loading
 
     try {
       const res = await axios.post("http://localhost:8000/api/v1/chat", {
@@ -33,6 +35,8 @@ const ChatBox = ({ darkMode }) => {
         ...prev,
         { sender: "bot", text: "❌ Error contacting assistant." },
       ]);
+    } finally {
+      setLoading(false); // Stop loading
     }
 
     setInput("");
@@ -44,70 +48,83 @@ const ChatBox = ({ darkMode }) => {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Example prompts */}
-      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {examples.map((ex, idx) => (
-          <button
-            key={idx}
-            onClick={() => handleExampleClick(ex)}
-            className={`text-left px-4 py-2 rounded border ${
-              darkMode
-                ? "bg-gray-800 border-gray-600 hover:bg-gray-700"
-                : "bg-gray-100 border-gray-300 hover:bg-gray-200"
-            } transition-colors`}
-          >
-            {ex}
-          </button>
-        ))}
+    <div className="flex h-[calc(100vh-64px)] bg-gray-900 text-white">
+      
+      {/* Sidebar (Examples like ChatGPT history) */}
+      <div className="w-64 bg-gray-800 border-r border-gray-700 flex flex-col">
+        <div className="p-4 border-b border-gray-700">
+          <h2 className="text-lg font-semibold mb-3">Examples</h2>
+          <div className="space-y-2">
+            {examples.map((ex, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleExampleClick(ex)}
+                className="w-full text-left bg-gray-700 hover:bg-gray-600 px-4 py-3 rounded-lg text-sm transition-colors"
+              >
+                {ex}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Chat messages */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4">
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`flex ${
-              msg.sender === "user" ? "justify-end" : "justify-start"
-            } transition-transform duration-500 transform-gpu`}
-          >
+      {/* Chat area */}
+      <div className="flex flex-col flex-1">
+        {/* Chat messages */}
+        <div className="flex-1 overflow-y-auto px-10 py-8 space-y-6">
+          {messages.length === 0 && (
+            <div className="flex justify-center items-center h-full text-gray-400">
+              Start a conversation...
+            </div>
+          )}
+          {messages.map((msg, idx) => (
             <div
-              className={`rounded-lg px-4 py-2 max-w-md text-sm ${
-                msg.sender === "user"
-                  ? "bg-green-600 text-white"
-                  : "bg-gray-700 text-gray-200"
+              key={idx}
+              className={`flex ${
+                msg.sender === "user" ? "justify-end" : "justify-start"
               }`}
             >
-              {msg.text}
+              <div
+                className={`rounded-xl px-6 py-4 max-w-3xl text-base leading-relaxed ${
+                  msg.sender === "user"
+                    ? "bg-green-600 text-white"
+                    : "bg-gray-700 text-gray-200"
+                } shadow`}
+              >
+                {msg.text}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
 
-      {/* Input area */}
-      <div
-        className={`flex items-center gap-3 px-4 py-3 border-t ${
-          darkMode ? "border-gray-700 bg-gray-800" : "border-gray-300 bg-gray-100"
-        }`}
-      >
-        <input
-          ref={inputRef}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          placeholder="Type your message..."
-          className={`flex-1 rounded px-3 py-2 focus:outline-none ${
-            darkMode
-              ? "bg-gray-700 text-white placeholder-gray-400"
-              : "bg-white text-gray-800"
-          }`}
-        />
-        <button
-          onClick={handleSend}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-all duration-300"
-        >
-          Send
-        </button>
+          {/* Typing indicator */}
+          {loading && (
+            <div className="flex justify-start">
+              <div className="rounded-xl px-6 py-4 max-w-3xl text-base leading-relaxed bg-gray-700 text-gray-200 shadow animate-pulse">
+                Thinking...
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Input area */}
+        <div className="bg-gray-800 border-t border-gray-700 px-8 py-5">
+          <div className="flex items-center gap-4">
+            <input
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              placeholder="Type your message..."
+              className="flex-1 rounded-full px-5 py-4 bg-gray-700 text-white placeholder-gray-400 focus:outline-none shadow-inner text-base"
+            />
+            <button
+              onClick={handleSend}
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full transition-all duration-300 shadow"
+            >
+              Send
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

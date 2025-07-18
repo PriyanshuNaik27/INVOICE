@@ -2,6 +2,7 @@ import axios from "axios";
 import { addInvoice } from "./invoiceController.js";
 import { addPayment } from "./paymentController.js";
 import { getMonthlyDues, getAllDues } from "../controllers/dueController.js";
+import { addReminder,getAllReminders } from "./reminderController.js";
 
 export const processChat = async (req, res) => {
   const WIT_API_TOKEN = process.env.WIT_TOKEN;
@@ -93,7 +94,7 @@ export const processChat = async (req, res) => {
       });
     }
 
-    //due
+    //3.get all dues
 
    
     if (intent === "get_all_dues") {
@@ -113,7 +114,7 @@ export const processChat = async (req, res) => {
       });
     }
 
-     // 🟡 Monthly dues (e.g. "Dues in July 2025")
+     //4. 🟡 Monthly dues (e.g. "Dues in July 2025")
     if (intent === "get_monthly_dues") {
       const datetime = entities["wit$datetime:datetime"]?.[0]?.value;
 
@@ -147,9 +148,43 @@ export const processChat = async (req, res) => {
           })} ${year}:\n` + responseLines.join("\n"),
       });
     }
+ // 5.Add Reminder
+    if (intent === "add_reminder") {
+      const title = entities["reminder_text:reminder_text"]?.[0]?.value || message;
+      const dueDate = entities["wit$datetime:datetime"]?.[0]?.value;
 
+      if (!title || !dueDate) {
+        return res.json({ response: "Please provide reminder title and date." });
+      }
+
+      const remainder = addReminder({ title, dueDate });
+      if (!remainder) {
+        return res.json({ response: "Failed to set reminder." });
+      }
+      return res.json({
+        response: `✅ Reminder set: "${title}" on ${new Date(dueDate).toDateString()}.`,
+      });
+    }
+
+    //6. Get All Reminders
+   if(intent === "get_all_reminders") {
+      const reminders = await getAllReminders();
+
+      if (reminders.length === 0) {
+        return res.json({ response: "No reminders found." });
+      }
+
+      const responseLines = reminders.map(
+        (r) => `• "${r.title}" on ${new Date(r.dueDate).toDateString()}`
+      );
+
+      return res.json({
+        response: `📅 All reminders:\n` + responseLines.join("\n"),
+      });
+    }
 
     return res.json({ response: "Intent recognized but not supported yet." });
+
   } catch (error) {
     console.error("❌ Error in chatController:", error.message);
     res.status(500).json({ response: "Internal server error." });

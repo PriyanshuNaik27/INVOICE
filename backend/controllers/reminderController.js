@@ -23,10 +23,10 @@ export const addReminder = async ({ title, dueDate }) => {
 };
 export const getAllReminders = async () => {
   try {
-    const reminders = await Reminder.find().sort({ dueDate: 1 }); // Optional: sorted by due date
-    res.status(200).json(reminders);
+    const reminders = await Reminder.find().sort({ dueDate: 1 });
+    return reminders; // 
   } catch (error) {
     console.error("❌ Error in getAllReminders:", error.message);
-    return ({ message: error.message });
+    return []; 
   }
 };

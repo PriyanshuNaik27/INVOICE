@@ -8,7 +8,7 @@ const ChatBox = ({ darkMode }) => {
   const inputRef = useRef(null);
 
   const examples = [
-    "Explain React in simple terms.",
+    "Add invoice for JOHN of 200 RS",
     "How does Node.js handle async operations?",
     "Give me a motivational quote.",
     "What is the time complexity of quicksort?",
@@ -85,14 +85,17 @@ const ChatBox = ({ darkMode }) => {
               }`}
             >
               <div
-                className={`rounded-xl px-6 py-4 max-w-3xl text-base leading-relaxed ${
+                className={`rounded-xl px-6 py-4 max-w-3xl text-base leading-relaxed whitespace-pre-line ${
                   msg.sender === "user"
                     ? "bg-green-600 text-white"
                     : "bg-gray-700 text-gray-200"
                 } shadow`}
               >
-                {msg.text}
+                {msg.text.split('\n').map((line, i) => (
+                  <p key={i} className="mb-1">{line}</p>
+                ))}
               </div>
+
             </div>
           ))}
 

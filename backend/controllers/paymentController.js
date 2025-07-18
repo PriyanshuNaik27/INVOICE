@@ -3,7 +3,7 @@
 import Payment from '../models/payment.model.js';
 import Customer from '../models/customer.model.js';
 
-export const addPayment = async ({ name, amount, paymentDate }) => {
+export const addPayment = async ({ name, amount, date }) => {
   try {
    
     const customerName = name.trim().toLowerCase();
@@ -19,16 +19,14 @@ export const addPayment = async ({ name, amount, paymentDate }) => {
     const payment = await Payment.create({
       customer: customer._id,
       amount,
-      paymentDate: paymentDate || Date.now(),
+      paymentDate: date || Date.now(),
     });
 
     return {
-      
-        id: payment._id,
-        customer: customer.name,
-        amount: payment.amount,
-        paymentDate: payment.paymentDate,
-      
+      id: payment._id,
+      customer: customer.name,
+      amount: payment.amount,
+      paymentDate: payment.paymentDate,
     };
 
     

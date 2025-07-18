@@ -85,11 +85,11 @@ export const processChat = async (req, res) => {
         return res.json({ response: "Please provide customer name." });
       }
 
-      const payment = await addPayment({ name, amount, date });
+      const payment = await addPayment({ name, amount, date});
 
       return res.json({
         response: `✅ Payment of ₹${amount} by ${name} on ${new Date(
-          payment.paymentDate
+          payment.paymentDate || Date.now()
         ).toDateString()}.`,
       });
     }

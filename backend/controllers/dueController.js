@@ -2,7 +2,7 @@ import Customer from "../models/customer.model.js";
 import Invoice from "../models/invoice.model.js";
 import Payment from "../models/payment.model.js";
 
-// 🟢 Get dues for ALL TIME
+//  Get dues for ALL TIME
 export const getAllDues = async () => {
   const customers = await Customer.find();
   const results = [];
@@ -35,7 +35,7 @@ export const getAllDues = async () => {
   return results;
 };
 
-// 🟡 Get dues for a specific month
+//  Get dues for a specific month
 export const getMonthlyDues = async ({ month, year }) => {
   const startDate = new Date(`${year}-${month}-01`);
   const endDate = new Date(startDate);

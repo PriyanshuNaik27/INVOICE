@@ -9,11 +9,11 @@ const ChatBox = ({ darkMode }) => {
 
   const examples = [
     "Add invoice for JOHN of 200 RS",
-    "How does Node.js handle async operations?",
-    "Give me a motivational quote.",
-    "What is the time complexity of quicksort?",
-    "Write a short bio for LinkedIn.",
-    "Explain JWT authentication."
+    "Mark a payment of 50 RS received from JOHN on 7th July",
+    "Add a reminder to call John on 10th July at 5 PM.",
+    "Give me all reminders ",
+    "Get all dues",
+    "get dues in July 2025",
   ];
 
   const handleSend = async () => {

@@ -13,7 +13,7 @@ const ChatBox = ({ darkMode }) => {
     "Add a reminder to call John on 10th July at 5 PM.",
     "Give me all reminders ",
     "Get all dues",
-    // "get dues in July 2025",
+    "get dues in September 2025",
   ];
 
   const handleSend = async () => {

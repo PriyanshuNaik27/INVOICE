@@ -2,6 +2,23 @@
 import Customer from '../models/customer.model.js';
 import Invoice from '../models/invoice.model.js';
 
+function parseDateWithFallback(inputDateStr) {
+  const today = new Date();
+  let parsedDate = new Date(inputDateStr);
+
+  if (isNaN(parsedDate)) {
+    throw new Error("Invalid date format");
+  }
+
+  // If year not given and parsedDate is in the past, assume next year
+  if (parsedDate < today && inputDateStr.match(/^\d{1,2}\s\w+$/i)) {
+    parsedDate.setFullYear(today.getFullYear() +1);
+  }
+
+  return parsedDate;
+}
+
+
 export const addInvoice = async ({ name, amount, date }) => {
   try {
     const customerName = name.trim().toLowerCase();
@@ -16,7 +33,7 @@ export const addInvoice = async ({ name, amount, date }) => {
     const invoice = await Invoice.create({
       customer: customer._id,
       amount,
-      date,
+      date: date ? parseDateWithFallback(date) : Date.now(),
     });
 
     // 3. Return useful data

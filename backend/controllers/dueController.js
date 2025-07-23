@@ -82,6 +82,34 @@ export const getMonthlyDues = async ({ month, year }) => {
       });
     }
   }
-
   return results;
+};
+// Get all-time dues for a specific customer
+export const getDuesOfCustomer = async ({ name }) => {
+  const customer = await Customer.findOne({ name });
+
+  if (!customer) {
+    throw new Error("Customer not found");
+  }
+
+  const invoiceAgg = await Invoice.aggregate([
+    { $match: { customer: customer._id } },
+    { $group: { _id: null, total: { $sum: "$amount" } } },
+  ]);
+
+  const paymentAgg = await Payment.aggregate([
+    { $match: { customer: customer._id } },
+    { $group: { _id: null, total: { $sum: "$amount" } } },
+  ]);
+
+  const invoices = invoiceAgg[0]?.total || 0;
+  const payments = paymentAgg[0]?.total || 0;
+  const due = invoices - payments;
+
+  return {
+    customer: customer.name,
+    invoices,
+    payments,
+    due,
+  };
 };

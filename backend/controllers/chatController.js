@@ -38,7 +38,7 @@ Message: "${message}"
       messages: [
         {
           role: "system",
-          content: "You are a helpful assistant that extracts structured data.",
+          content: "You are a helpful assistant that extracts structured data.Also note that receipt and payment are the same",
         },
         { role: "user", content: prompt },
       ],
@@ -50,7 +50,7 @@ Message: "${message}"
       parsed = JSON.parse(completion.choices[0].message.content);
     } catch (e) {
       return res.json({
-        response: "Sorry, I couldn't understand your request.Also note that receipt and payment are the same",
+        response: "Sorry, I couldn't understand your request.",
       });
     }
 
@@ -60,7 +60,9 @@ Message: "${message}"
     const amount = entities?.amount;
     const date = entities?.date;
     const title = entities?.title;
-    const name = getname.toLowerCase();
+    if(getname){
+      const name = getname.toLowerCase();
+    }
 
     if (!intent || confidence < 0.7) {
       return res.json({ response: "Sorry, I didn't understand that clearly." });

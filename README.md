@@ -26,9 +26,6 @@ The system interprets these requests and updates records automatically, making f
 
 By tracking dues, overdue payments, and reminders, Invoicer provides insights into client payment behavior and supports better cash-flow visibility. These features can form the foundation for credit risk monitoring and exposure management.
 
-🚀 Demo
-
-🔗 Live Project
 
 🛠️ Tech Stack
 

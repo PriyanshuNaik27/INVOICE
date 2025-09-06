@@ -60,8 +60,9 @@ Message: "${message}"
     const amount = entities?.amount;
     const date = entities?.date;
     const title = entities?.title;
+    let name="test";
     if(getname){
-      const name = getname.toLowerCase();
+      name  = getname.toLowerCase();
     }
 
     if (!intent || confidence < 0.7) {
